@@ -30,7 +30,8 @@ const app = Vue.createApp({
             },
             product: {},
             cart: {},
-            loadItemId: ''
+            loadItemId: '',
+            isLoading: false,
         }
     },
     methods:{
@@ -43,9 +44,11 @@ const app = Vue.createApp({
                 }
             };
             this.loadItemId = id;
+            this.updateLoading();
             axios.post(`${this.apiConfig.url}/api/${this.apiConfig.api_Path}/cart`, para)
                 .then(res => {
                     this.loadItemId = '';
+                    this.updateLoading();
                     alert(res.data.message);
                     this.getCart();
                     this.hideModal();
@@ -56,9 +59,11 @@ const app = Vue.createApp({
         },
         //取得購物車資料
         getCart() {
+            this.updateLoading();
             axios.get(`${this.apiConfig.url}/api/${this.apiConfig.api_Path }/cart`)
                 .then((res) => {
                     this.cart = res.data.data;
+                    this.updateLoading();
                     //console.log(this.cart);
                 })
                 .catch((err) => {
@@ -79,8 +84,16 @@ const app = Vue.createApp({
             return phoneNumber.test(value) ? true : '請輸入正確的電話號碼'
         },
         onSubmit() {
-            console.log(this.user);
+            this.updateLoading();
+            setTimeout(() => { 
+                this.updateLoading();
+                console.log(this.user); 
+                this.$refs.form.resetForm();
+            }, 3000);
         },
+        updateLoading() {
+            this.isLoading = !this.isLoading
+        }
     },
     mounted() {
         this.getCart();
@@ -97,5 +110,8 @@ app.component('cart-list', componentCartList);
 app.component('VForm', VeeValidate.Form);
 app.component('VField', VeeValidate.Field);
 app.component('ErrorMessage', VeeValidate.ErrorMessage);
+//Vue overlay Loading
+app.use(VueLoading.Plugin);
+app.component('loading', VueLoading.Component)
 
 app.mount('#app');

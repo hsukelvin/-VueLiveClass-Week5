@@ -15,10 +15,12 @@ export default {
     methods: {
         //取得所有產品
         getProducts() {
+            this.emitLoadingStatus();
             axios.get(`${this.apiConfig.url}/api/${this.apiConfig.api_Path}/products`)
                 .then((res) => {
                     const { products } = res.data;
                     this.products = products;
+                    this.emitLoadingStatus();
                     //console.log(this.products);
                 })
                 .catch((err) => {
@@ -28,9 +30,11 @@ export default {
         //取得單一產品
         getProduct(id) {
             this.loadItemId = id;
+            this.emitLoadingStatus();
             axios.get(`${this.apiConfig.url}/api/${this.apiConfig.api_Path}/product/${id}`)
                 .then((res) => {
                     this.loadItemId = '';
+                    this.emitLoadingStatus();
                     const { product } = res.data;
                     this.$emit('openModal', product);
                 })
@@ -40,6 +44,9 @@ export default {
         },
         emitProductItem(id) {
             this.$emit('addCart', id);
+        },
+        emitLoadingStatus() {
+            this.$emit('updateLoading');
         }
     },
     mounted() {

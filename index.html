@@ -16,14 +16,21 @@
     <div id="app">
       <div class="container">
         <div class="mt-4">
+
+            <!-- vue loading overlay -->
+            <div class="vld-parent">
+                <loading v-model:active="isLoading"/>
+            </div>
+
             <!-- 產品Modal -->
             <product-modal ref="productModal" :product="product" @add-cart="addToCart"></product-modal>
         
             <!-- 產品列表 -->
-            <product-list :load-id="loadItemId" :api-config="apiConfig" @open-modal="openModal" @add-cart="addToCart"></product-list>
+            <product-list :load-id="loadItemId" :api-config="apiConfig" @open-modal="openModal" @add-cart="addToCart" @update-loading="updateLoading"></product-list>
 
             <!-- 購物車列表 -->
-            <cart-list :cart="cart" :api-config="apiConfig" @get-cart="getCart"></cart-list>
+            <cart-list :cart="cart" :api-config="apiConfig" @get-cart="getCart" @update-loading="updateLoading"></cart-list>
+
         </div>
         <div class="my-5 row justify-content-center">
             <!-- 表單 -->
@@ -64,7 +71,7 @@
                     <v-field 
                         id="tel" 
                         name="電話" 
-                        type="text" 
+                        type="tel" 
                         class="form-control" 
                         :class="{ 'is-invalid': errors['電話'] }"
                         placeholder="請輸入電話"
@@ -255,7 +262,10 @@
     <script src="https://unpkg.com/vee-validate@next"></script>
     <script src="https://unpkg.com/@vee-validate/i18n@4.1.0"></script>
     <script src="https://unpkg.com/@vee-validate/rules"></script>
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@5"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@5/dist/vue-loading.css" rel="stylesheet">
+
     <script src="./js/index.js" type="module"></script>
   </body>
 
